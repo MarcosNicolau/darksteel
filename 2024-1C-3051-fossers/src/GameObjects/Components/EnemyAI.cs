@@ -77,6 +77,7 @@ public class EnemyAI : IComponent
         if (Vector3.Dot(enemy.Transform.Up, Vector3.Up) < 0.4f)
         {
             enemy.Health -= 0.3f;
+            HandleCollision();
             return;
         }
 
@@ -110,20 +111,6 @@ public class EnemyAI : IComponent
 
     private void ChaseState(GameTime gameTime, Enemy self, float distanceToPlayer)
     {
-
-        foreach (var obj in _nearbyObjects)
-        {
-            var toObject = obj.Transform.AbsolutePosition - self.Transform.AbsolutePosition;
-            float angle = Vector3.Dot(toObject, self.Transform.Forward) / (toObject.Length() * self.Transform.Forward.Length());
-            angle = (float)Math.Acos(angle);
-            float distance = toObject.Length();
-
-            if (angle < NearbyObjectDetectionAngle && distance < NearbyObjectDetectionDistance)
-            {
-                _rb.ApplyForce(self.Transform.Forward * MaximumForce);
-                return;
-            }
-        }
 
 
         if (_collided)
@@ -222,8 +209,8 @@ public class EnemyAI : IComponent
 
         }), Vector3.Zero, BulletMass, 0, 0));
 
-        bullet.AddComponent(new LightComponent(Color.White));
-        Timer.Timeout(10 * ReloadDelayMs, () => bullet.Destroy());
+        bullet.AddComponent(new LightComponent(Color.Red,1f));
+        Timer.Timeout(5000, () => bullet.Destroy());
 
         return bullet;
     }

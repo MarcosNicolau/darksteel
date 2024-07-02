@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -82,41 +83,44 @@ class LightProcessor : ISceneProcessor
         _device.SetRenderTarget(ShadowMapRenderTarget);
         _device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, new Color(0, 0, 0, 1), 1, 0);
 
-        foreach (var o in scene.GetGameObjects())
+        foreach (var o in scene.GetVisibleObjects(scene.Camera.View * scene.Camera.Projection))
         {
             o.Renderer.DrawShadowMap(o, LightViewProjection, FarPlaneDistance);
         }
 
         _device.SetRenderTarget(ContentRepoManager.Instance().GlobalRenderTarget);
     }
-
     public void Draw(Scene scene)
     {
         _device.SetRenderTarget(_dynamicLightsRenderTarget);
         _device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
 
+        _device.BlendState = BlendState.Opaque;
+
         var visibleObjects = scene.GetVisibleObjects(scene.Camera.View * scene.Camera.Projection);
+        var lights = new List<Light>(_lights);
 
-        foreach (var light in _lights)
+
+        foreach (var obj in visibleObjects)
         {
-            _device.BlendState = BlendState.Opaque;
+            obj.Renderer.DrawLight(obj, scene, new Light(new Transform(), Color.Black), true);
+        }
 
-            foreach (var obj in visibleObjects)
-            {
-                obj.Renderer.DrawLight(obj, scene, light, true);
-            }
+        _device.BlendState = BlendState.Additive;
 
-            _device.BlendState = BlendState.Additive;
-
-            foreach (var obj in visibleObjects)
+        foreach (var obj in visibleObjects)
+        {
+            foreach (var light in lights)
             {
                 obj.Renderer.DrawLight(obj, scene, light, false);
             }
+        }
 
-            _device.BlendState = BlendState.Additive;
+        _device.BlendState = BlendState.AlphaBlend;
+        bloomEffect.Parameters["Screen"].SetValue(_dynamicLightsRenderTarget);
 
-            bloomEffect.Parameters["Screen"].SetValue(_dynamicLightsRenderTarget);
-
+        foreach (var light in GetVisibleLights(scene))
+        {
             var pos = _device.Viewport.Project(light.Transform.AbsolutePosition, scene.Camera.Projection, scene.Camera.View, Matrix.Identity);
             var lightScreenPos = new Vector2(pos.X / _device.Viewport.Width, pos.Y / _device.Viewport.Height);
             var distance = 1 / (1 - pos.Z) * 0.0001f;
@@ -125,7 +129,6 @@ class LightProcessor : ISceneProcessor
             bloomEffect.Parameters["LightColor"].SetValue(light.Color.ToVector3());
             bloomEffect.Parameters["Distance"].SetValue(distance);
             screenQuad.Draw(bloomEffect);
-
         }
 
         _device.SetRenderTarget(ContentRepoManager.Instance().GlobalRenderTarget);
@@ -136,6 +139,22 @@ class LightProcessor : ISceneProcessor
         scene.SpriteBatch.End();
 
         scene.ResetGraphicsDevice();
+    }
+
+    private List<Light> GetVisibleLights(Scene scene)
+    {
+        var visibleLights = new List<Light>();
+
+        var frustum = new BoundingFrustum(scene.Camera.View * scene.Camera.Projection);
+        foreach (var light in _lights)
+        {
+            if (frustum.Contains(new BoundingSphere(light.Transform.Position, 100)) != ContainmentType.Disjoint)
+            {
+                visibleLights.Add(light);
+            }
+        }
+
+        return visibleLights;
     }
 
 

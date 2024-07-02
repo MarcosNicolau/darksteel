@@ -22,9 +22,8 @@ namespace WarSteel.Scenes.Main
         private const float CameraFieldOfView = MathHelper.PiOver2;
         private const float CameraNearPlane = 0.1f;
         private const float CameraFarPlane = 50000f;
-        private const int MapWidth = 7000;
-        private const int MapHeight = 7000;
-
+        private const int MapWidth = 7600;
+        private const int MapHeight = 7200;
         private const int WallWidth = 9600;
         private const int WallHeight = 9200;
 
@@ -55,10 +54,11 @@ namespace WarSteel.Scenes.Main
             InitializeSceneProcessors();
 
             var factory = new MapFactory(this);
-            var player = InitializePlayer(factory);
+
             InitializeWalls(factory);
             InitializeGround(factory);
             InitializeGroundObjects(factory);
+            var player = InitializePlayer(factory);
             InitializeUI(player);
         }
 
@@ -149,8 +149,10 @@ namespace WarSteel.Scenes.Main
             for (int i = 0; i < 10; i++)
             {
                 Vector3 pos = grid.GetRandomUnusedGridPosition(10);
-                GameObject rock = factory.Tree(pos);
-                AddGameObject(rock);
+                GameObject treeBase = factory.TreeBase(pos);
+                GameObject treeTop = factory.TreeTop(pos);
+                AddGameObject(treeBase);
+                AddGameObject(treeTop);
             }
         }
 

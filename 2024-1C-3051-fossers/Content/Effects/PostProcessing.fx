@@ -36,13 +36,9 @@ VS_OUTPUT MainVS(VS_INPUT input) {
 }
 
 float4 MainPS(VS_OUTPUT input) : SV_TARGET {
-    float2 pixelSize = 300;
+    float2 pixelSize = 270;
     float2 pixelatedUV = float2(floor(input.UV.x * pixelSize.x) / pixelSize.x,floor(input.UV.y * pixelSize.y) / pixelSize.y);
-
-    // Average color over the 4 nearest texels
     float4 color = tex2D(textureSampler, pixelatedUV);
-
-
     return color;
 }
 

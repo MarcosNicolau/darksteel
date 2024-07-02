@@ -20,6 +20,7 @@ public abstract class Scene
     private bool _isPaused = false;
     public bool IsPaused { get => _isPaused; }
     public SkyBox SkyBox;
+    
 
 
     public void Pause()
@@ -80,15 +81,9 @@ public abstract class Scene
         return _UIs.Contains(ui);
     }
 
-    public void RemoveUI(UI ui)
-    {
-        if (_UIs.Contains(ui))
-            _UIs.Remove(ui);
-    }
-
     public void RemoveUI(List<UI> UIs)
     {
-        UIs.ForEach(ui => _UIs.Remove(ui));
+        UIs.ForEach(ui => ui.Destroy());
     }
 
     public void AddGameObject(GameObject entity)
@@ -164,7 +159,7 @@ public abstract class Scene
         {
             sceneProcessor.Draw(this);
         }
-        
+
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, null);
         List<UI> uis = new(_UIs);
 
@@ -196,13 +191,18 @@ public abstract class Scene
 
     public virtual void Update(GameTime gameTime)
     {
+
+        CheckDeletedEntities();
+
         foreach (var ui in new List<UI>(_UIs))
         {
             ui?.Update(this, gameTime);
         }
 
         if (_isPaused)
+        {
             return;
+        }
 
         Camera?.Update(this, gameTime);
 
@@ -215,9 +215,6 @@ public abstract class Scene
         {
             processor.Update(this, gameTime);
         }
-
-
-        CheckDeletedEntities();
 
     }
     private void CheckDeletedEntities()
@@ -237,6 +234,7 @@ public abstract class Scene
             if (ui == null || ui.IsDestroyed())
             {
                 _UIs.Remove(ui);
+                ui.Recreate();
             }
         }
     }

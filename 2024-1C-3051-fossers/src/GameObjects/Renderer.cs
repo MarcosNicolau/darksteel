@@ -19,6 +19,8 @@ namespace WarSteel.Common.Shaders
         private readonly Effect _effect;
         private readonly Effect _shadowEffect;
 
+        private float _diffuseCoefficient = 0.2f;
+
         public Renderer(Texture2D texture)
         {
             _texture = texture;
@@ -26,11 +28,13 @@ namespace WarSteel.Common.Shaders
             _shadowEffect = ContentRepoManager.Instance().GetEffect("Shadow");
         }
 
-        public Renderer(Color color)
+        public Renderer(Color color,float diffuseCoefficient = 0.2f)
         {
             _color = color;
             _effect = ContentRepoManager.Instance().GetEffect("Shader");
             _shadowEffect = ContentRepoManager.Instance().GetEffect("Shadow");
+            _diffuseCoefficient = diffuseCoefficient;
+
         }
 
         public void DrawDefault(GameObject gameObject, Scene scene)
@@ -99,7 +103,7 @@ namespace WarSteel.Common.Shaders
 
                     effect.Parameters["ShadowDepth"].SetValue(lightProcessor.ShadowMapRenderTarget);
                     effect.Parameters["TextureSize"].SetValue(lightProcessor.ShadowMapSize);
-                    effect.Parameters["DiffuseCoefficient"].SetValue(0.2f);
+                    effect.Parameters["DiffuseCoefficient"].SetValue(_diffuseCoefficient);
                     effect.Parameters["FarPlaneDistance"].SetValue(lightProcessor.FarPlaneDistance);
                     effect.Parameters["LightDirection"].SetValue(lightProcessor.LightDirection);
                 }

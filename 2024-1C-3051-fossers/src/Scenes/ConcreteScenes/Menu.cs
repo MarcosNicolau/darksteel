@@ -45,8 +45,12 @@ public class MenuScene : Scene
 
         for (int i = 0; i < numBushes; i++)
             AddGameObject(factory.Bush(VectorUtils.GetRandomVec3Pos(Vector3.Zero, rand)));
-        for (int i = 0; i < numTress; i++)
-            AddGameObject(factory.Tree(VectorUtils.GetRandomVec3Pos(Vector3.Zero, rand)));
+        for (int i = 0; i < numTress; i++){
+            Vector3 randPos = VectorUtils.GetRandomVec3Pos(Vector3.Zero, rand);
+            AddGameObject(factory.TreeBase(randPos));
+            AddGameObject(factory.TreeTop(randPos));
+        }
+            
         for (int i = 0; i < numRocks; i++)
             AddGameObject(factory.Rock(VectorUtils.GetRandomVec3Pos(new Vector3(0, 100, 0), rand), RockSize.LARGE));
     }

@@ -27,7 +27,6 @@ namespace WarSteel.Scenes.Main
 
         private DynamicBody _rb;
         private bool _isReloading = false;
-        private GameObject _lastBullet;
 
         private float _startFlipTime = 0;
         private bool _canMove = false;
@@ -126,9 +125,8 @@ namespace WarSteel.Scenes.Main
         {
             if (_isReloading) return;
 
-            _lastBullet?.Destroy();
+
             var bullet = CreateBullet((Player)self, scene);
-            _lastBullet = bullet;
             AudioManager.Instance.PlaySound(Audios.SHOOT);
             scene.AddGameObject(bullet);
             bullet.GetComponent<DynamicBody>().ApplyForce(-_tankCannon.Forward * BulletForce);
@@ -157,11 +155,14 @@ namespace WarSteel.Scenes.Main
             Timer.Timeout(3000, () => bullet.Destroy());
 
         }), Vector3.Zero, BulletMass, 0, 0));
-            bullet.AddComponent(new LightComponent(Color.LightSkyBlue));
+            Timer.Timeout(5000, () => bullet.Destroy());
+            bullet.AddComponent(new LightComponent(Color.LightSkyBlue,1));
             bullet.GetComponent<DynamicBody>().Velocity = self.GetComponent<DynamicBody>().Velocity;
             bullet.Transform.Position = _tankCannon.AbsolutePosition - _tankCannon.Forward * BulletPositionOffsetForward + _tankCannon.Up * BulletPositionOffsetUp;
             return bullet;
         }
+
+
 
         public void Destroy(GameObject self, Scene scene) { }
     }

@@ -24,14 +24,25 @@ class MapFactory
         return new Player(_scene, position);
     }
 
-    public GameObject Tree(Vector3 position)
+    public GameObject TreeBase(Vector3 position)
     {
-        Model model = ContentRepoManager.Instance().GetModel("Map/Trees/1");
+        Model model = ContentRepoManager.Instance().GetModel("Map/Tree_Base");
         Renderer renderer = new(Color.Brown);
         GameObject tree = new(new string[] { GROUND }, new Transform(), model, renderer);
         tree.Transform.Dimensions = tree.Transform.Dimensions;
         tree.AddComponent(new StaticBody(new Collider(new ConvexShape(model), (c) => { }), Vector3.Zero));
-        tree.Transform.Position = position - Vector3.Up * 50;
+        tree.Transform.Position = position;
+        return tree;
+    }
+
+    public GameObject TreeTop(Vector3 position)
+    {
+        Model model = ContentRepoManager.Instance().GetModel("Map/Tree_Top");
+        Renderer renderer = new(Color.Green);
+        GameObject tree = new(new string[] { GROUND }, new Transform(), model, renderer);
+        tree.Transform.Dimensions = tree.Transform.Dimensions;
+        tree.AddComponent(new StaticBody(new Collider(new ConvexShape(model), (c) => { }), Vector3.Zero));
+        tree.Transform.Position = position;
         return tree;
     }
 
