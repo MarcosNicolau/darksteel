@@ -95,12 +95,9 @@ class LightProcessor : ISceneProcessor
         _device.SetRenderTarget(_dynamicLightsRenderTarget);
         _device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
 
-        _device.BlendState = BlendState.Opaque;
-
         var visibleObjects = scene.GetVisibleObjects(scene.Camera.View * scene.Camera.Projection);
-        List<Light> visibleLights = GetVisibleLights(scene);
 
-        foreach (var light in visibleLights)
+        foreach (var light in _lights)
         {
             _device.BlendState = BlendState.Opaque;
 
@@ -116,7 +113,8 @@ class LightProcessor : ISceneProcessor
                 obj.Renderer.DrawLight(obj, scene, light, false);
             }
 
-            _device.BlendState = BlendState.AlphaBlend;
+            _device.BlendState = BlendState.Additive;
+
             bloomEffect.Parameters["Screen"].SetValue(_dynamicLightsRenderTarget);
 
             var pos = _device.Viewport.Project(light.Transform.AbsolutePosition, scene.Camera.Projection, scene.Camera.View, Matrix.Identity);
@@ -140,21 +138,6 @@ class LightProcessor : ISceneProcessor
         scene.ResetGraphicsDevice();
     }
 
-    private List<Light> GetVisibleLights(Scene scene)
-    {
-        var visibleLights = new List<Light>();
-
-        var frustum = new BoundingFrustum(scene.Camera.View * scene.Camera.Projection);
-        foreach (var light in _lights)
-        {
-            if (frustum.Contains(new BoundingSphere(light.Transform.Position, 100)) != ContainmentType.Disjoint)
-            {
-                visibleLights.Add(light);
-            }
-        }
-
-        return visibleLights;
-    }
 
     public void AddLight(Light light)
     {

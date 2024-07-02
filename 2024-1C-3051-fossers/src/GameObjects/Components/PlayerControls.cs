@@ -139,7 +139,10 @@ namespace WarSteel.Scenes.Main
 
         public GameObject CreateBullet(Player self, Scene scene)
         {
-            var bullet = new GameObject(new[] { "bullet" }, new Transform(), ContentRepoManager.Instance().GetModel("Tanks/Bullet"), new Renderer(Color.Red));
+            var bullet = new GameObject(new[] { "bullet" }, new Transform(), ContentRepoManager.Instance().GetModel("Tanks/Bullet"), new Renderer(Color.Red))
+            {
+                AlwaysRender = true
+            };
             bullet.AddComponent(new DynamicBody(new Collider(new SphereShape(10), c =>
         {
             if (c.Entity.HasTag("enemy") && !bullet.HasTag("HitGround") && !bullet.HasTag("HitEnemy"))
@@ -149,13 +152,10 @@ namespace WarSteel.Scenes.Main
                 enemy.Model.AddImpact(bullet.Transform.AbsolutePosition, bullet.GetComponent<DynamicBody>().Velocity);
                 bullet.AddTag("HitEnemy");
             }
-            if (c.Entity.HasTag("ground"))
-            {
-                bullet.AddTag("HitGround");
-                bullet.GetComponent<LightComponent>().DecayFactor = 5f;
-            }
-
+            bullet.GetComponent<LightComponent>().DecayFactor = 5f;
+            bullet.AddTag("HitGround");
             Timer.Timeout(3000, () => bullet.Destroy());
+
         }), Vector3.Zero, BulletMass, 0, 0));
             bullet.AddComponent(new LightComponent(Color.LightSkyBlue));
             bullet.GetComponent<DynamicBody>().Velocity = self.GetComponent<DynamicBody>().Velocity;

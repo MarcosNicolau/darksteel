@@ -202,8 +202,10 @@ public class EnemyAI : IComponent
             Transform =
             {
                 Position = _cannonTransform.AbsolutePosition - _cannonTransform.Forward * 500 + _cannonTransform.Up * 250
-            }
+            },
+            AlwaysRender = true
         };
+
 
         bullet.AddComponent(new DynamicBody(new Collider(new SphereShape(10), c =>
         {
@@ -213,13 +215,11 @@ public class EnemyAI : IComponent
                 _player.Model.AddImpact(bullet.Transform.AbsolutePosition, bullet.GetComponent<DynamicBody>().Velocity);
                 bullet.AddTag("HitPlayer");
             }
-            if (c.Entity.HasTag("ground"))
-            {
-                bullet.AddTag("HitGround");
-                bullet.GetComponent<LightComponent>().DecayFactor = 5f;
-            }
 
+            bullet.AddTag("HitGround");
+            bullet.GetComponent<LightComponent>().DecayFactor = 5f;
             Timer.Timeout(3000, () => bullet.Destroy());
+
         }), Vector3.Zero, BulletMass, 0, 0));
 
         bullet.AddComponent(new LightComponent(Color.White));

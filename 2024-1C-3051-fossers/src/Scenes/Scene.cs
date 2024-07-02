@@ -164,8 +164,7 @@ public abstract class Scene
         {
             sceneProcessor.Draw(this);
         }
-
-
+        
         SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, null);
         List<UI> uis = new(_UIs);
 
