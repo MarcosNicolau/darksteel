@@ -145,7 +145,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Map/Box.fbx
 
 #begin Models/Map/Bush.fbx
@@ -354,7 +354,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Map/Trees/1.fbx
 
 #begin Models/SkyBox/cube.fbx
@@ -373,7 +373,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/SkyBox/cube.fbx
 
 #begin Models/Tanks/Bullet.fbx
@@ -392,7 +392,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Tanks/Bullet.fbx
 
 #begin Models/Tanks/Panzer/Panzer.fbx
@@ -411,7 +411,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Tanks/Panzer/Panzer.fbx
 
 #begin Models/Tanks/Panzer/PzVI_Tiger_I_NM.dds
@@ -502,7 +502,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Tanks/Simple.fbx
 
 #begin Models/Tanks/T90/T90.fbx
@@ -521,7 +521,7 @@
 /processorParam:RotationZ=0
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Models/Tanks/T90/T90.fbx
 
 #begin Models/Tanks/T90/textures_mod/hullA.jpg
